@@ -7,6 +7,7 @@ const keys = require("./config/keys");
 
 // Below in order required (passport uses User)
 require("./models/User");
+require("./models/Comment");
 require("./services/passport");
 
 mongoose.connect(keys.mLab);
