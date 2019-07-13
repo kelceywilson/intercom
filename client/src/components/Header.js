@@ -5,9 +5,6 @@ import { Link } from "react-router-dom";
 import Payments from "./Payments";
 
 class Header extends Component {
-  // componentDidMount() {
-  //   this.props.auth
-  // }
   renderContent() {
     switch (this.props.auth) {
       case null:
@@ -34,10 +31,6 @@ class Header extends Component {
   }
 
   render() {
-    console.log(this.props);
-
-    // <li>Dashboard</li>
-    // <li>Log in with Google</li>
     return (
       <nav>
         <div className="nav-wrapper">
