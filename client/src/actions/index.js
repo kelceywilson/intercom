@@ -18,7 +18,7 @@ export const handleToken = token => async dispatch => {
 export const submitComment = (values, history) => async dispatch => {
   const res = await axios.post("/api/comments", values);
 
-  history.push("/comments");
+  history.push("/dashboard");
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
