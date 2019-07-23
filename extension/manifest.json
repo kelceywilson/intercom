@@ -1,19 +1,21 @@
 {
-
   "manifest_version": 2,
   "name": "intercomment",
   "version": "1.0",
-
   "description": "Allows users to comment on web pages.",
-
   "icons": {
-    "48": "images/meerkat.png"
+    "48": "meerkat.png"
   },
   "permissions": [
     "activeTab"
   ],
+  "browser_action": {
+    "default_icon": "meerkat.png",
+    "default_title": "Intercom",
+    "default_popup": "popup/buttons.html"
+  },
   "content_scripts": [{
-    "matches": ["*://*"],
+    "matches": ["<all_urls>"],
     "js": ["intercomment.js"]
   }]
 
