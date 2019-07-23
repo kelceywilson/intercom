@@ -2,9 +2,9 @@
  * CSS to hide everything on the page,
  * except for elements that have the "beastify-image" class.
  */
-const hidePage = `body > :not(.beastify-image) {
-  display: none;
-}`;
+// const hidePage = `body > :not(.beastify-image) {
+//   display: none;
+// }`;
 
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
@@ -12,19 +12,32 @@ const hidePage = `body > :not(.beastify-image) {
  */
 function listenForClicks() {
   document.addEventListener("click", e => {
+    console.log("click event:", e);
+
+    function logTabs(tabs) {
+      for (let tab of tabs) {
+        // tab.url requires the `tabs` permission
+        console.log(tab.url);
+      }
+    }
+
+    function onError(error) {
+      console.log(`Error: ${error}`);
+    }
+
     /**
      * Given the name of a beast, get the URL to the corresponding image.
      */
-    function beastNameToURL(beastName) {
-      switch (beastName) {
-        case "Frog":
-          return browser.extension.getURL("beasts/frog.jpg");
-        case "Snake":
-          return browser.extension.getURL("beasts/snake.jpg");
-        case "Turtle":
-          return browser.extension.getURL("beasts/turtle.jpg");
-      }
-    }
+    // function beastNameToURL(beastName) {
+    //   switch (beastName) {
+    //     case "Frog":
+    //       return browser.extension.getURL("beasts/frog.jpg");
+    //     case "Snake":
+    //       return browser.extension.getURL("beasts/snake.jpg");
+    //     case "Turtle":
+    //       return browser.extension.getURL("beasts/turtle.jpg");
+    //   }
+    // }
 
     /**
      * Insert the page-hiding CSS into the active tab,
@@ -32,13 +45,17 @@ function listenForClicks() {
      * send a "beastify" message to the content script in the active tab.
      */
     function beastify(tabs) {
-      browser.tabs.insertCSS({ code: hidePage }).then(() => {
-        let url = beastNameToURL(e.target.textContent);
-        browser.tabs.sendMessage(tabs[0].id, {
-          command: "beastify",
-          beastURL: url
+      // const url = await browser.tabs.getCurrent();
+      // console.log(url);
+      browser.tabs
+        .query({ currentWindow: true, active: true })
+        .then(querying => {
+          console.log(querying);
+          browser.tabs.sendMessage(tabs[0].id, {
+            command: "comment",
+            url: querying[0].url
+          });
         });
-      });
     }
 
     /**
@@ -46,10 +63,8 @@ function listenForClicks() {
      * send a "reset" message to the content script in the active tab.
      */
     function reset(tabs) {
-      browser.tabs.removeCSS({ code: hidePage }).then(() => {
-        browser.tabs.sendMessage(tabs[0].id, {
-          command: "reset"
-        });
+      browser.tabs.sendMessage(tabs[0].id, {
+        command: "reset"
       });
     }
 
@@ -57,7 +72,7 @@ function listenForClicks() {
      * Just log the error to the console.
      */
     function reportError(error) {
-      console.error(`Could not beastify: ${error}`);
+      console.error(`Could not comment: ${error}`);
     }
 
     /**
@@ -65,6 +80,8 @@ function listenForClicks() {
      * then call "beastify()" or "reset()" as appropriate.
      */
     if (e.target.classList.contains("beast")) {
+      console.log("click event:", e);
+
       browser.tabs
         .query({ active: true, currentWindow: true })
         .then(beastify)
@@ -85,7 +102,7 @@ function listenForClicks() {
 function reportExecuteScriptError(error) {
   document.querySelector("#popup-content").classList.add("hidden");
   document.querySelector("#error-content").classList.remove("hidden");
-  console.error(`Failed to execute beastify content script: ${error.message}`);
+  console.error(`Failed to execute Intercom content script: ${error.message}`);
 }
 
 /**
@@ -94,6 +111,6 @@ function reportExecuteScriptError(error) {
  * If we couldn't inject the script, handle the error.
  */
 browser.tabs
-  .executeScript({ file: "/content_scripts/beastify.js" })
+  .executeScript({ file: "/content_scripts/intercom.js" })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);
