@@ -40,8 +40,22 @@
    * Call "comment()" or "reset()".
    */
   browser.runtime.onMessage.addListener(message => {
+    console.log("comment", message);
     if (message.command === "comment") {
-      console.log("comment", message.url);
+      console.log("comment", message);
+      // const request = new XMLHttpRequest();
+      // request.open("POST", "http://localhost:3000/api/comments")
+      fetch("http://localhost:3000/api/comments", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(message)
+      })
+        .then(response => response.json())
+        .then(response2 => console.log(response2));
     } else if (message.command === "reset") {
       console.log("reset", message.command);
     }

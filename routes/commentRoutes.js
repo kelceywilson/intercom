@@ -54,17 +54,21 @@ module.exports = app => {
   });
 
   app.post("/api/comments", requireLogin, requireCredits, async (req, res) => {
-    const { body, title, subject, recipients } = req.body;
+    console.log("post comment", req.body);
+
+    const { body, title, recipients, url } = req.body;
     // console.log(recipients.split(",").map(email => ({ email: email.trim() })));
     // const to = recipients.split(",").map(email => ({ email: email.trim() }));
     const comment = new Comment({
       title,
-      subject,
       body,
+      url,
+      subject: "fake subject",
       recipients: recipients.split(",").map(email => ({ email: email.trim() })),
       _user: req.user.id,
       date: Date.now()
     });
+    console.log("new comment", comment);
 
     const mailer = new Mailer(comment, commentEmailTemplate(comment));
 
@@ -74,6 +78,8 @@ module.exports = app => {
       req.user.credits -= 1;
 
       const user = await req.user.save();
+      console.log("user commented", user);
+
       res.send(user);
     } catch (err) {
       res.status(422).send(err);

@@ -51,12 +51,46 @@ function listenForClicks() {
         .query({ currentWindow: true, active: true })
         .then(querying => {
           console.log(querying);
-          browser.tabs.sendMessage(tabs[0].id, {
+          const values = {
             command: "comment",
-            url: querying[0].url
-          });
+            url: querying[0].url,
+            title: querying[0].title,
+            body: "intercom",
+            recipients: "kelceywilson@gmail.com",
+            _user: "5d0007279870315656bed3b6"
+          };
+
+          browser.tabs.sendMessage(tabs[0].id, values);
         });
     }
+    // function beastify(tabs) {
+    //   // const url = await browser.tabs.getCurrent();
+    //   // console.log(url);
+    //   browser.tabs
+    //     .query({ currentWindow: true, active: true })
+    //     .then(querying => {
+    //       console.log(querying);
+    //       const values = {
+    //         command: "comment",
+    //         url: querying[0].url,
+    //         title: querying[0].title,
+    //         body: "intercom",
+    //         _user: "5d0007279870315656bed3b6"
+    //       };
+    //       axios.post("http://localhost:3000/api/comments", values);
+    //     })
+    //     .then(response => {
+    //       browser.tabs.sendMessage(tabs[0].id, response);
+    //     });
+
+    //   // browser.tabs.sendMessage(tabs[0].id, {
+    //   //   command: "comment",
+    //   //   url: querying[0].url,
+    //   //   title: querying[0].title,
+    //   //   _user: "5d0007279870315656bed3b6"
+    //   // });
+    //   // });
+    // }
 
     /**
      * Remove the page-hiding CSS from the active tab,
@@ -75,6 +109,9 @@ function listenForClicks() {
       console.error(`Could not comment: ${error}`);
     }
 
+    function postComment(comment) {
+      console.log(comment);
+    }
     /**
      * Get the active tab,
      * then call "beastify()" or "reset()" as appropriate.
