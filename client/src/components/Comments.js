@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchComments } from "../actions";
+import { fetchComments, deleteComment } from "../actions";
 
 class Comments extends Component {
   componentDidMount() {
@@ -14,6 +14,7 @@ class Comments extends Component {
           <div className="card-content">
             <span className="card-title">{comment.title}</span>
             <p>{comment.body}</p>
+            <p>{comment.url}</p>
             <p className="right">
               Sent On: {new Date(comment.date).toLocaleDateString()}
             </p>
@@ -21,6 +22,12 @@ class Comments extends Component {
           <div className="card-action">
             <div>Yes: {comment.yes}</div>
             <div>No: {comment.no}</div>
+            <button
+              className="red btn-flat right"
+              onClick={() => this.props.deleteComment(comment._id)}
+            >
+              Delete Comment
+            </button>
           </div>
         </div>
       );
@@ -37,5 +44,5 @@ function mapStateToProps({ comments }) {
 }
 export default connect(
   mapStateToProps,
-  { fetchComments }
+  { fetchComments, deleteComment }
 )(Comments);

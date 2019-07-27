@@ -9,5 +9,7 @@
 - [x]Create new sendgrid account for production
 - [x]Set up extension basics
 - [x]Get extension to post to api
-- allow CORS to use web db to save notes
+- [x]Show url of comment
+- [x]create delete commment route
+- [x]allow CORS to use web db to save notes
 - group tabs?

@@ -8,15 +8,22 @@ const Mailer = require("../services/Mailer");
 const commentEmailTemplate = require("../services/emailTemplates/commentEmailTemplate");
 const Comment = mongoose.model("comments");
 
+function getComments(userId) {
+  return Comment.find({ _user: userId }).select({
+    recipients: false
+  });
+}
+
 module.exports = app => {
   app.get("/api/comments/:commentId/:choice", (req, res) => {
     res.send("Thanks for voting!");
   });
 
   app.get("/api/comments", requireLogin, async (req, res) => {
-    const comments = await Comment.find({ _user: req.user._id }).select({
-      recipients: false
-    });
+    // const comments = await Comment.find({ _user: req.user._id }).select({
+    //   recipients: false
+    // });
+    const comments = await getComments(req.user._id);
     res.send(comments);
   });
 
@@ -57,8 +64,6 @@ module.exports = app => {
     console.log("post comment", req.body);
 
     const { body, title, recipients, url } = req.body;
-    // console.log(recipients.split(",").map(email => ({ email: email.trim() })));
-    // const to = recipients.split(",").map(email => ({ email: email.trim() }));
     const comment = new Comment({
       title,
       body,
@@ -84,5 +89,16 @@ module.exports = app => {
     } catch (err) {
       res.status(422).send(err);
     }
+  });
+
+  app.delete("/api/comments", requireLogin, async (req, res) => {
+    console.log("delete comment route", req.body);
+
+    Comment.findByIdAndRemove(req.body.id).exec();
+    console.log(`comment ${req.body.id} deleted`);
+    const comments = await getComments(req.user._id);
+    // console.log("new comment list", comments);
+
+    res.send(comments);
   });
 };

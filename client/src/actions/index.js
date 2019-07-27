@@ -15,6 +15,12 @@ export const handleToken = token => async dispatch => {
   return dispatch({ type: FETCH_USER, payload: res.data });
 };
 
+export const fetchComments = () => async dispatch => {
+  const res = await axios.get("/api/comments");
+
+  dispatch({ type: FETCH_COMMENTS, payload: res.data });
+};
+
 export const submitComment = (values, history) => async dispatch => {
   const res = await axios.post("/api/comments", values);
 
@@ -22,8 +28,10 @@ export const submitComment = (values, history) => async dispatch => {
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const fetchComments = () => async dispatch => {
-  const res = await axios.get("/api/comments");
+export const deleteComment = id => async dispatch => {
+  console.log("delete comment", id);
+
+  const res = await axios.delete("/api/comments", { data: { id: id } });
 
   dispatch({ type: FETCH_COMMENTS, payload: res.data });
 };

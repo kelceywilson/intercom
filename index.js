@@ -11,6 +11,8 @@ require("./models/Comment");
 require("./services/passport");
 
 mongoose.connect(keys.mLab);
+mongoose.set("useFindAndModify", false); // see https://mongoosejs.com/docs/deprecations.html#-findandmodify-
+
 const app = express();
 
 app.use(bodyParser.json());
