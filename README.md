@@ -12,4 +12,9 @@
 - [x]Show url of comment
 - [x]create delete commment route
 - [x]allow CORS to use web db to save notes
+- Set up popup so that actual comments can be made
+- Think about setting up websocket so to show new comment scroll
+- Set up friend connections
+- Add license to all pages
+- Set up stripe to accept real money donations
 - group tabs?
